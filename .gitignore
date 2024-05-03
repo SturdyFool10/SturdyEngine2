@@ -1,0 +1,11 @@
+# Ignore Visual Studio project and solution files
+*.vcxproj
+*.sln
+*.vsidx
+
+# Ignore specific directories
+.vs/
+Binaries/
+libs/
+CPUInfo/obj/
+Engine/obj/
