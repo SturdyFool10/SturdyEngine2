@@ -1,4 +1,5 @@
 Write-Host "Cleaning and regenerating project files..."
+./ClearVSProjectFiles.ps1
 Start-Sleep -Seconds 1
 premake5 clean
 Write-Host "Building for Visual Studio 2022..."
