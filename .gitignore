@@ -2,7 +2,9 @@
 *.vcxproj
 *.sln
 *.vsidx
-
+Engine/*.vcxproj
+Engine/*.sln
+Engine/*.vsidx
 # Ignore specific directories
 .vs/
 Binaries/
