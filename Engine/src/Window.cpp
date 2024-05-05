@@ -85,6 +85,14 @@ namespace SFT {
         }
     }
 
+    void Window::callResizeHandlers(const input::ResizeEvent& event) {
+        for (auto& handler : this->m_resize_handlers) {
+            if (handler.active) {
+                handler.handler(event);
+            }
+        }
+    }
+
 #pragma endregion
 
 #pragma region Handler Management
@@ -115,57 +123,74 @@ namespace SFT {
         size_t len = this->m_scroll_handlers.size();
         this->m_scroll_handlers.push_back(store);
         return len;
-    };
+    }
+
+    size_t Window::addResizeHandler(input::ResizeEventHandler handler) {
+        input::ResizeHandlerStore store{ handler, true };
+        size_t len = this->m_resize_handlers.size();
+        this->m_resize_handlers.push_back(store);
+        return len;
+    }
 
     void Window::deactivateKeyHandler(size_t index) {
-        if (index < this->m_key_handlers.size()) {
+        if (index >= 0 && (index < this->m_key_handlers.size())) {
             this->m_key_handlers[index].active = false;
         }
     }
 
     void Window::deactivateCursorPositionHandler(size_t index) {
-        if (index < this->m_cursor_position_handlers.size()) {
+        if (index >= 0 && (index < this->m_cursor_position_handlers.size())) {
             this->m_cursor_position_handlers[index].active = false;
         }
     }
 
     void Window::deactivateClickHandler(size_t index) {
-        if (index < this->m_click_handlers.size()) {
+        if (index >= 0 && (index < this->m_click_handlers.size())) {
             this->m_click_handlers[index].active = false;
         }
     }
 
     void Window::deactivateScrollHandler(size_t index) {
-        if (index < this->m_scroll_handlers.size()) {
+        if (index >= 0 && (index < this->m_scroll_handlers.size())) {
             this->m_click_handlers[index].active = false;
         }
     }
 
+    void Window::deactivateResizeHandler(size_t index) {
+        if (index >= 0 && (index < this->m_resize_handlers.size())) {
+            this->m_resize_handlers[index].active = false;
+        }
+    }
+
     void Window::activateKeyHandler(size_t index) {
-        if (index < this->m_key_handlers.size()) {
+        if (index >= 0 && (index < this->m_key_handlers.size())) {
             this->m_key_handlers[index].active = true;
         }
     }
 
     void Window::activateCursorPositionHandler(size_t index) {
-        if (index < this->m_cursor_position_handlers.size()) {
+        if (index >= 0 && (index < this->m_cursor_position_handlers.size())) {
             this->m_cursor_position_handlers[index].active = true;
         }
     }
 
     void Window::activateClickHandler(size_t index) {
-        if (index < this->m_click_handlers.size()) {
+        if (index >= 0 && (index < this->m_click_handlers.size())) {
             this->m_click_handlers[index].active = true;
         }
     }
 
     void Window::activateScrollHandler(size_t index) {
-        if (index < this->m_scroll_handlers.size()) {
+        if (index >= 0 && (index < this->m_scroll_handlers.size())) {
             this->m_scroll_handlers[index].active = true;
         }
     }
 
-    
+    void Window::activateResizeHandler(size_t index) {
+        if (index >= 0 && (index < this->m_resize_handlers.size())) {
+            this->m_resize_handlers[index].active = true;
+        }
+    }
 
 #pragma endregion
 

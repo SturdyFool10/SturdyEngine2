@@ -22,8 +22,7 @@ project "App"
 
    links
    {
-      "Core",
-      "CPUInfo"
+      "Core"
    }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")

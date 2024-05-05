@@ -9,8 +9,6 @@ workspace "New Project"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
 
 OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
-group "CPUInfo"
-    include "CPUInfo/Build-CPUInfo.lua"
 group "Engine"
 	include "Engine/Build-Core.lua"
 group "Editor"

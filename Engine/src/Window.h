@@ -46,6 +46,11 @@ namespace SFT {
 			double yoffset;
 		};
 
+		struct ResizeEvent {
+			GLFWwindow* window;
+			tvec2<int> size;
+		};
+
 #pragma endregion
 
 #pragma region Handler Type Definitions
@@ -54,6 +59,7 @@ namespace SFT {
 		using CursorPositionEventHandler = std::function<void(const CursorPositionEvent&)>;
 		using ClickEventHandler = std::function<void(const ClickEvent&)>;
 		using ScrollEventHandler = std::function<void(const ScrollEvent&)>;
+		using ResizeEventHandler = std::function<void(const ResizeEvent&)>;
 #pragma endregion
 
 #pragma region Event Handler Storage
@@ -73,6 +79,10 @@ namespace SFT {
 			ScrollEventHandler handler;
 			bool active;
 		};
+		struct ResizeHandlerStore {
+			ResizeEventHandler handler;
+			bool active;
+		};
 #pragma endregion
 
 	}
@@ -90,6 +100,7 @@ Cursor Changing / Control
 		std::vector<input::CursorPositionHandlerStore> m_cursor_position_handlers;
 		std::vector<input::ClickHandlerStore> m_click_handlers;
 		std::vector<input::ScrollHandlerStore> m_scroll_handlers;
+		std::vector<input::ResizeHandlerStore> m_resize_handlers;
 #pragma endregion
 
 	public:
@@ -115,6 +126,7 @@ Cursor Changing / Control
 			glfwSetCursorPosCallback(this->m_window_handle, cursor_position_callback);
 			glfwSetMouseButtonCallback(this->m_window_handle, mouse_button_callback);
 			glfwSetScrollCallback(this->m_window_handle, scroll_callback);
+			glfwSetWindowSizeCallback(this->m_window_handle, resize_callback);
 			//the line below stores a user pointer, this allows the window class instance to reach the input functions assuming nobody messes with the user pointer
 			glfwSetWindowUserPointer(this->m_window_handle, this);
 			
@@ -146,6 +158,7 @@ Cursor Changing / Control
 			};
 			win->callKeyHandlers(ev);
 		}
+
 		static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 			input::CursorPositionEvent ev{
@@ -155,6 +168,7 @@ Cursor Changing / Control
 			};
 			win->callCursorPosHandlers(ev);
 		}
+
 		static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 			win->callClickHandlers({
@@ -164,6 +178,7 @@ Cursor Changing / Control
 				mods
 			});
 		}
+
 		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
 			win->callScrollHandlers({
@@ -172,6 +187,15 @@ Cursor Changing / Control
 				yoffset
 			});
 		}
+
+		static void resize_callback(GLFWwindow* window, int width, int height) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->callResizeHandlers({
+				window,
+				{width, height}
+				});
+		}
+
 #pragma endregion
 
 #pragma region Window Properties Management
@@ -192,6 +216,7 @@ Cursor Changing / Control
 		void callCursorPosHandlers(const input::CursorPositionEvent& event);
 		void callClickHandlers(const input::ClickEvent& event);
 		void callScrollHandlers(const input::ScrollEvent& event);
+		void callResizeHandlers(const input::ResizeEvent& event);
 #pragma endregion
 
 #pragma region Handler Management
@@ -200,16 +225,19 @@ Cursor Changing / Control
 		size_t addCursorPositionHandler(input::CursorPositionEventHandler handler);
 		size_t addClickHandler(input::ClickEventHandler handler);
 		size_t addScrollHandler(input::ScrollEventHandler handler);
+		size_t addResizeHandler(input::ResizeEventHandler handler);
 
 		void deactivateKeyHandler(size_t index);
 		void deactivateCursorPositionHandler(size_t index);
 		void deactivateClickHandler(size_t index);
 		void deactivateScrollHandler(size_t index);
+		void deactivateResizeHandler(size_t index);
 
 		void activateKeyHandler(size_t index);
 		void activateCursorPositionHandler(size_t index);
 		void activateClickHandler(size_t index);
 		void activateScrollHandler(size_t index);
+		void activateResizeHandler(size_t index);
 
 #pragma endregion
 

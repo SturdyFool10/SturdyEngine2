@@ -19,18 +19,71 @@ project "Core"
         vk_sdk_path .. "Include/",  -- Include directory from VK_SDK_PATH, the vksdk path has a / at the end
         "../libs/Core/include"
     }
-    
-    links
-    {
-        "CPUInfo"
-    }
-    
     libdirs 
     {
         "../libs/Core/PreCompiled",
         vk_sdk_path .. "Lib"  -- Library directory from VK_SDK_PATH the vksdk path has a / at the end
     }
-
+    links { 
+        "glfw3",
+        "dxcompiler", 
+        "dxcompilerd", 
+        "GenericCodeGen", 
+        "GenericCodeGend", 
+        "glslang-default-resource-limits", 
+        "glslang-default-resource-limitsd", 
+        "glslang", 
+        "glslangd", 
+        "MachineIndependent", 
+        "MachineIndependentd", 
+        "OSDependent", 
+        "OSDependentd", 
+        "shaderc", 
+        "shadercd", 
+        "shaderc_combined", 
+        "shaderc_combinedd", 
+        "shaderc_shared", 
+        "shaderc_sharedd", 
+        "shaderc_util", 
+        "shaderc_utild", 
+        "spirv-cross-c-shared", 
+        "spirv-cross-c-sharedd", 
+        "spirv-cross-c", 
+        "spirv-cross-cd", 
+        "spirv-cross-core", 
+        "spirv-cross-cored", 
+        "spirv-cross-cpp", 
+        "spirv-cross-cppd", 
+        "spirv-cross-glsl", 
+        "spirv-cross-glsld", 
+        "spirv-cross-hlsl", 
+        "spirv-cross-hlsld", 
+        "spirv-cross-msl", 
+        "spirv-cross-msld", 
+        "spirv-cross-reflect", 
+        "spirv-cross-reflectd", 
+        "spirv-cross-util", 
+        "spirv-cross-utild", 
+        "SPIRV-Tools-diff", 
+        "SPIRV-Tools-diffd", 
+        "SPIRV-Tools-link", 
+        "SPIRV-Tools-linkd", 
+        "SPIRV-Tools-lint", 
+        "SPIRV-Tools-lintd", 
+        "SPIRV-Tools-opt", 
+        "SPIRV-Tools-optd", 
+        "SPIRV-Tools-reduce", 
+        "SPIRV-Tools-reduced", 
+        "SPIRV-Tools-shared", 
+        "SPIRV-Tools-sharedd", 
+        "SPIRV-Tools", 
+        "SPIRV-Toolsd", 
+        "SPIRV", 
+        "SPIRVd", 
+        "SPVRemapper", 
+        "SPVRemapperd", 
+        "vulkan-1"
+    }
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"
