@@ -3,7 +3,7 @@ project "Core"
     language "C++"
     cppdialect "C++latest"
 
-    targetdir "binaries/%{prj.name}/%{cfg.buildcfg}"
+    targetdir "../Binaries/%{cfg.buildcfg}/%{prj.name}"
     files { "src/**.cpp", "src/**.h" }
 
     -- Retrieve VK_SDK_PATH environment variable
@@ -84,6 +84,8 @@ project "Core"
         "SPVRemapperd", 
         "vulkan-1"
     }
+    targetname "SturdyEngine2"
+    objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"

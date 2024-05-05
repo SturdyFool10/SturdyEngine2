@@ -25,8 +25,9 @@ project "App"
       "Core"
    }
 
-   targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   targetdir("../Binaries/%{cfg.buildcfg}/%{wks.name}")
+   targetname "%{wks.name}"
+   objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
 
    filter "system:windows"
        systemversion "latest"
