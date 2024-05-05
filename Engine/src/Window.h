@@ -103,6 +103,58 @@ Cursor Changing / Control
 		std::vector<input::ResizeHandlerStore> m_resize_handlers;
 #pragma endregion
 
+#pragma region CHandlers
+		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			input::KeyEvent ev{
+				win,
+				key,
+				scancode,
+				action,
+				mods
+			};
+			win->callKeyHandlers(ev);
+		}
+
+		static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			input::CursorPositionEvent ev{
+				win,
+				xpos,
+				ypos
+			};
+			win->callCursorPosHandlers(ev);
+		}
+
+		static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->callClickHandlers({
+				window,
+				button,
+				action,
+				mods
+				});
+		}
+
+		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->callScrollHandlers({
+				window,
+				xoffset,
+				yoffset
+				});
+		}
+
+		static void resize_callback(GLFWwindow* window, int width, int height) {
+			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
+			win->callResizeHandlers({
+				window,
+				{width, height}
+				});
+		}
+
+#pragma endregion
+
 	public:
 #pragma region Constructor / Destructor
 		Window(int width, int height, std::string title, bool destroyDefaultSurface = false) {
@@ -144,58 +196,6 @@ Cursor Changing / Control
 			}
 			glfwTerminate();
 		}
-#pragma endregion
-
-#pragma region CHandlers
-		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			input::KeyEvent ev{
-				win,
-				key,
-				scancode,
-				action,
-				mods
-			};
-			win->callKeyHandlers(ev);
-		}
-
-		static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			input::CursorPositionEvent ev{
-				win,
-				xpos,
-				ypos
-			};
-			win->callCursorPosHandlers(ev);
-		}
-
-		static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			win->callClickHandlers({
-				window,
-				button,
-				action,
-				mods
-			});
-		}
-
-		static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			win->callScrollHandlers({
-				window,
-				xoffset,
-				yoffset
-			});
-		}
-
-		static void resize_callback(GLFWwindow* window, int width, int height) {
-			Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-			win->callResizeHandlers({
-				window,
-				{width, height}
-				});
-		}
-
 #pragma endregion
 
 #pragma region Window Properties Management
