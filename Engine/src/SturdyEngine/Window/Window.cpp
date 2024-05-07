@@ -26,6 +26,7 @@ namespace SFT {
         glfwSetWindowSizeCallback(this->m_window_handle, resize_callback);
         //the line below stores a user pointer, this allows the window class instance to reach the input functions assuming nobody messes with the user pointer
         glfwSetWindowUserPointer(this->m_window_handle, this);
+        glfwSetWindowSizeLimits(this->m_window_handle, 120, 120, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
         this->m_key_handlers = {};
         this->m_cursor_position_handlers = {};
@@ -295,8 +296,6 @@ namespace SFT {
             this->m_resize_handlers[index].arb = ptr;
         }
     }
-
-
 
 #pragma endregion
 

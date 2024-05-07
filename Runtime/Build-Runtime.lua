@@ -6,6 +6,13 @@ project "App"
    staticruntime "off"
 
    files { "src/**.h", "src/**.cpp" }
+   
+   local vk_sdk_path = os.getenv("VK_SDK_PATH"):gsub("\\", "/")
+   if vk_sdk_path == nil then
+       print("[Runtime]: ERROR: VK_SDK_PATH environment variable is not set.\nEnsure the Vulkan SDK has been installed.")
+       os.exit(1) -- Exit if VK_SDK_PATH is not set
+   end
+   print("[Runtime]: Vulkan SDK Found in folder: " .. vk_sdk_path)
 
    includedirs
    {
@@ -15,10 +22,11 @@ project "App"
 	  "../Engine/src",
       --dependancy includes
       "../libs/Core/include",
-      "../libs/Runtime/include"
+      "../libs/Runtime/include",
+      vk_sdk_path .. "Include"
    }
 
-   libdirs { "../libs/Core/PreCompiled", "../libs/Runtime/PreCompiled" }
+   libdirs { "../libs/Core/PreCompiled", "../libs/Runtime/PreCompiled", vk_sdk_path .. "Lib" }
 
    links
    {

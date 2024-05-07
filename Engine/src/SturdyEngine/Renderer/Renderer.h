@@ -1,4 +1,8 @@
-#include <GLFW/glfw3.h>
+#pragma once
+#include "GLFW/glfw3.h"
+#include "GLM/common.hpp"
+
+using glm::tvec2;
 
 namespace SFT {
 	class Renderer {
@@ -20,8 +24,9 @@ namespace SFT {
 
 		void draw_frame();
 		void initialize();
+		void setupMainLoop();
 		void destroy();
-
+		void resize(tvec2<size_t> size);
 
 
 	};

@@ -1,5 +1,9 @@
 #pragma once
-#define GLFW_EXPOSE_NATIVE_WIN32
+#ifdef _WIN64
+	#define GLFW_EXPOSE_NATIVE_WIN32 0
+#elif defined __linux__
+	
+#endif
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <glm/common.hpp>
