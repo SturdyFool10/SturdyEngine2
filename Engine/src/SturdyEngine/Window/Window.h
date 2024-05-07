@@ -266,12 +266,6 @@ Cursor Changing / Control
 		void setScrollUserPointer(void* ptr, size_t index);
 		void setResizeUserPointer(void* ptr, size_t index);
 
-		void* getKeyUserPointer(size_t index);
-		void* getCursorUserPointer(size_t index);
-		void* getClickUserPointer(size_t index);
-		void* getScrollUserPointer(size_t index);
-		void* getResizeUserPointer(size_t index);
-
 
 #pragma endregion
 
