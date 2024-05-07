@@ -56,7 +56,15 @@ namespace SFT {
     void Window::callKeyHandlers(const input::KeyEvent& event) {
         for (auto& handler : this->m_key_handlers) {
             if (handler.active) {
-                handler.handler(event);
+                input::KeyEvent eve{
+                    event.window,
+                    event.key,
+                    event.scancode,
+                    event.action,
+                    event.mods,
+                    handler.arb
+                };
+                handler.handler(eve);
             }
         }
     }
@@ -64,7 +72,12 @@ namespace SFT {
     void Window::callCursorPosHandlers(const input::CursorPositionEvent& event) {
         for (auto& handler : this->m_cursor_position_handlers) {
             if (handler.active) {
-                handler.handler(event);
+                input::CursorPositionEvent eve{
+                    event.window,
+                    event.pos,
+                    handler.arb
+                };
+                handler.handler(eve);
             }
         }
     }
@@ -72,7 +85,14 @@ namespace SFT {
     void Window::callClickHandlers(const input::ClickEvent& event) {
         for (auto& handler : this->m_click_handlers) {
             if (handler.active) {
-                handler.handler(event);
+                input::ClickEvent eve{
+                    event.window,
+                    event.button,
+                    event.action,
+                    event.mods,
+                    handler.arb
+                };
+                handler.handler(eve);
             }
         }
     }
@@ -80,7 +100,12 @@ namespace SFT {
     void Window::callScrollHandlers(const input::ScrollEvent& event) {
         for (auto& handler : this->m_scroll_handlers) {
             if (handler.active) {
-                handler.handler(event);
+                input::ScrollEvent eve{
+                    event.window,
+                    event.offset,
+                    handler.arb
+                };
+                handler.handler(eve);
             }
         }
     }
@@ -88,7 +113,12 @@ namespace SFT {
     void Window::callResizeHandlers(const input::ResizeEvent& event) {
         for (auto& handler : this->m_resize_handlers) {
             if (handler.active) {
-                handler.handler(event);
+                input::ResizeEvent eve{
+                    event.window,
+                    event.size,
+                    handler.arb
+                };
+                handler.handler(eve);
             }
         }
     }
@@ -191,6 +221,38 @@ namespace SFT {
             this->m_resize_handlers[index].active = true;
         }
     }
+
+    void Window::setKeyUserPointer(void* ptr, size_t index) {
+        if (index >= 0 && (index < this->m_key_handlers.size())) {
+            this->m_key_handlers[index].arb = ptr;
+        }
+    }
+
+    void Window::setCursorUserPointer(void* ptr, size_t index) {
+        if (index >= 0 && (index < this->m_cursor_position_handlers.size())) {
+            this->m_cursor_position_handlers[index].arb = ptr;
+        }
+    }
+
+    void Window::setClickUserPointer(void* ptr, size_t index) {
+        if (index >= 0 && (index < this->m_click_handlers.size())) {
+            this->m_click_handlers[index].arb = ptr;
+        }
+    }
+
+    void Window::setScrollUserPointer(void* ptr, size_t index) {
+        if (index >= 0 && (index < this->m_scroll_handlers.size())) {
+            this->m_scroll_handlers[index].arb = ptr;
+        }
+    }
+
+    void Window::setResizeUserPointer(void* ptr, size_t index) {
+        if (index >= 0 && (index < this->m_resize_handlers.size())) {
+            this->m_resize_handlers[index].arb = ptr;
+        }
+    }
+
+
 
 #pragma endregion
 
