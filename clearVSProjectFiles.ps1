@@ -2,7 +2,7 @@
 $rootDirectory = Get-Location
 
 # Define the file patterns to search for
-$filePatterns = @("*.vcxproj", "*.sln", "*.vcxproj.user")
+$filePatterns = @("*.vcxproj", "*.sln", "*.vcxproj.*")
 
 # Get all files matching the patterns in the directory and its subdirectories
 $filesToDelete = Get-ChildItem -Path $rootDirectory -Include $filePatterns -Recurse -File

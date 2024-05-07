@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "SturdyEngine/Window/Window.h"
 #include "iostream"
 void Resized(const SFT::input::ResizeEvent& event) {
 	std::cout << "Resized: (" << event.size.x << ", " << event.size.y << ")" << std::endl;
