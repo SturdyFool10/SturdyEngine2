@@ -16,8 +16,7 @@ namespace SFT {
             exit(1);
         }
         if (glfwRawMouseMotionSupported())
-            std::cout << "Raw mouse motion is being used..." << std::endl;
-        glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+            glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
         this->m_window_handle = window;
         glfwSetKeyCallback(this->m_window_handle, key_callback);
         glfwSetCursorPosCallback(this->m_window_handle, cursor_position_callback);

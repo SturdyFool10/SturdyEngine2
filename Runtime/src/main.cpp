@@ -2,5 +2,5 @@
 #include "iostream"
 
 int main() {
-	SFT::SturdyEngine app();
+	SFT::SturdyEngine app = SFT::SturdyEngine();
 }

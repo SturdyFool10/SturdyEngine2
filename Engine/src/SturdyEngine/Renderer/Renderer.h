@@ -1,7 +1,7 @@
 #pragma once
 #include "GLFW/glfw3.h"
 #include "GLM/common.hpp"
-
+#include "iostream"
 using glm::tvec2;
 
 namespace SFT {
@@ -22,12 +22,9 @@ namespace SFT {
 			this->destroy();
 		}
 
-		void draw_frame();
-		void initialize();
-		void setupMainLoop();
-		void destroy();
-		void resize(tvec2<size_t> size);
-
-
+		virtual void draw_frame() {};
+		virtual void initialize() {};
+		virtual void destroy() {};
+		virtual void resize(tvec2<size_t> size) {};
 	};
 }

@@ -24,10 +24,11 @@ namespace SFT {
 		VulkanRenderer() = default;
 		VulkanRenderer(GLFWwindow* winHandle);
 		~VulkanRenderer();
-		void initialize();
+		virtual void initialize() override;
 		void create_surface();
 		void create_vk_instance();
-		void destroy();
-		void setupMainLoop();
+		virtual void destroy() override;
+		bool checkValidationLayerSupport();
+		std::vector<std::string> getAllowedLayers();
 	};
 }
