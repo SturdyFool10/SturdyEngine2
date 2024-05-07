@@ -2,6 +2,7 @@
 *.vcxproj
 *.sln
 *.vsidx
+*.vcxproj.*
 Engine/*.vcxproj
 Engine/*.sln
 Engine/*.vsidx
