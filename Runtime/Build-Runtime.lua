@@ -29,23 +29,34 @@ project "App"
    targetname "%{wks.name}"
    objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
 
-   filter "system:windows"
+    filter "system:windows"
        systemversion "latest"
        defines { "WINDOWS" }
 
-   filter "configurations:Debug"
-       defines { "DEBUG" }
-       runtime "Debug"
-       symbols "On"
+    filter "configurations:DebugWin"
+        defines { "DEBUG" }
+        symbols "On"
 
-   filter "configurations:Release"
-       defines { "RELEASE" }
-       runtime "Release"
-       optimize "On"
-       symbols "On"
+    filter "configurations:ReleaseWin"
+        defines { "NDEBUG" }
+        optimize "On"
+        symbols "On"
 
-   filter "configurations:Dist"
-       defines { "DIST" }
-       runtime "Release"
-       optimize "On"
-       symbols "Off"
+    filter "configurations:DistWin"
+        defines { "NDEBUG" }
+        optimize "On"
+        symbols "Off"
+
+    filter "configurations:DebugVulkanWin"
+        defines { "DEBUG", "VULKAN" }
+        symbols "On"
+
+    filter "configurations:ReleaseVulkanWin"
+        defines { "NDEBUG", "VULKAN" }
+        optimize "On"
+        symbols "On"
+
+    filter "configurations:DistVulkanWin"
+        defines { "NDEBUG", "VULKAN" }
+        optimize "On"
+        symbols "Off"

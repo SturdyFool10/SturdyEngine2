@@ -86,16 +86,30 @@ project "Core"
     }
     targetname "SturdyEngine2"
     objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
-    filter "configurations:Debug"
+    filter "configurations:DebugWin"
         defines { "DEBUG" }
         symbols "On"
 
-    filter "configurations:Release"
+    filter "configurations:ReleaseWin"
         defines { "NDEBUG" }
         optimize "On"
         symbols "On"
 
-    filter "configurations:Dist"
+    filter "configurations:DistWin"
         defines { "NDEBUG" }
+        optimize "On"
+        symbols "Off"
+
+    filter "configurations:DebugVulkanWin"
+        defines { "DEBUG", "VULKAN" }
+        symbols "On"
+
+    filter "configurations:ReleaseVulkanWin"
+        defines { "NDEBUG", "VULKAN" }
+        optimize "On"
+        symbols "On"
+
+    filter "configurations:DistVulkanWin"
+        defines { "NDEBUG", "VULKAN" }
         optimize "On"
         symbols "Off"

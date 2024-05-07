@@ -1,6 +1,50 @@
 #include "Window.h"
 namespace SFT {
 
+#pragma region Window Constructor / Destructor
+    Window::Window(int width, int height, std::string title, bool destroyDefaultSurface) {
+        if (!glfwInit()) {
+            std::cerr << "Failed to initialize window... glfwInit() failed..." << std::endl;
+            exit(1);
+        }
+        if (destroyDefaultSurface) {
+            glfwWindowHint(GLFW_NO_API, GLFW_TRUE);
+        }
+        auto window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+        if (!window) {
+            std::cerr << "Failed to initialize window... glfwCreateWindow() failed..." << std::endl;
+            exit(1);
+        }
+        if (glfwRawMouseMotionSupported())
+            std::cout << "Raw mouse motion is being used..." << std::endl;
+        glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        this->m_window_handle = window;
+        glfwSetKeyCallback(this->m_window_handle, key_callback);
+        glfwSetCursorPosCallback(this->m_window_handle, cursor_position_callback);
+        glfwSetMouseButtonCallback(this->m_window_handle, mouse_button_callback);
+        glfwSetScrollCallback(this->m_window_handle, scroll_callback);
+        glfwSetWindowSizeCallback(this->m_window_handle, resize_callback);
+        //the line below stores a user pointer, this allows the window class instance to reach the input functions assuming nobody messes with the user pointer
+        glfwSetWindowUserPointer(this->m_window_handle, this);
+
+        this->m_key_handlers = {};
+        this->m_cursor_position_handlers = {};
+    }
+
+    Window::Window() {
+        int width = 800, height = 600;
+        std::string title = "Hello World!";
+        bool destroyDefaultSurface = false;
+    }
+
+    Window::~Window() {
+        if (this->m_window_handle) {
+            glfwDestroyWindow(this->m_window_handle);
+        }
+        glfwTerminate();
+    }
+#pragma endregion
+
 #pragma region Window Method Implimentations
 
 #pragma region Window Properties Management
