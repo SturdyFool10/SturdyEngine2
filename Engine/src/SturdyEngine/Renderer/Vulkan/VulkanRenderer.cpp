@@ -28,16 +28,9 @@ namespace SFT {
 	VulkanRenderer::~VulkanRenderer() {
 		this->destroy();
 	}
-	
-	void VulkanRenderer::create_surface() {
-	}
-
+#pragma region VKInstance Creation
 	void VulkanRenderer::create_vk_instance() {
 		std::vector<std::string> layers = getAllowedLayers();
-
-		if (enableValidationLayers && !checkValidationLayerSupport()) {
-			exit(1);
-		}
 		VkApplicationInfo appInfo{};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		appInfo.pApplicationName = "SturdyEngine Application";
@@ -57,7 +50,6 @@ namespace SFT {
 		createInfo.enabledExtensionCount = glfwExtensionCount;
 		createInfo.ppEnabledExtensionNames = glfwExtensions;
 
-		createInfo.enabledLayerCount = 0;
 		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
 		std::vector<const char*> layersC{};
 		for (auto& i : layers) {
@@ -106,13 +98,70 @@ namespace SFT {
 		}
 		return layers;
 	}
+#pragma endregion
 
+#pragma region Physical Device Creation
+	void VulkanRenderer::pickPhysicalDevice() {
+		uint32_t deviceCount = 0;
+		vkEnumeratePhysicalDevices(this->m_instance, &deviceCount, nullptr);
+		if (deviceCount == 0) {
+			throw std::runtime_error("failed to find GPUs with Vulkan support!");
+		}
+		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(this->m_instance, &deviceCount, devices.data());
+		double maxScore;
+		VkPhysicalDevice HighestScorer = VK_NULL_HANDLE;
+		for (auto& i : devices) {
+			double score = this->ScorePhysicalDevice(i);
+			if (score > maxScore) {
+				if (isDeviceSuitable(i)) {
+					HighestScorer = i;
+					maxScore = score;
+				}
+			}
+		}
+
+		if (HighestScorer == VK_NULL_HANDLE) {
+			throw std::runtime_error("failed to find a suitable GPU!");
+		}
+		this->m_physicalDevice = HighestScorer;
+
+
+	}
+
+	bool VulkanRenderer::isDeviceSuitable(VkPhysicalDevice device) {
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(device, &deviceProperties);
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader) {
+			return true;
+		}
+		return false;
+	}
+	double VulkanRenderer::ScorePhysicalDevice(VkPhysicalDevice& device) {
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(device, &deviceProperties);
+		VkPhysicalDeviceFeatures deviceFeatures;
+		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+		double score = 0.;
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+			score += deviceProperties.limits.maxFramebufferWidth;
+			score += deviceProperties.limits.maxFramebufferHeight;
+			score += deviceProperties.limits.maxMemoryAllocationCount;
+			score += deviceFeatures.multiViewport * 10000;
+		}
+
+		return score;
+	}
+
+#pragma endregion
 	void VulkanRenderer::initialize() {
 		this->create_vk_instance();
-		this->create_surface();
+		this->pickPhysicalDevice();
 	}
 
 	void VulkanRenderer::destroy() {
-
+		vkDestroyInstance(this->m_instance, nullptr);
 	}
 }

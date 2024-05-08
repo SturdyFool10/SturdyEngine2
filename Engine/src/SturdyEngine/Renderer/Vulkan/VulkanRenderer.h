@@ -14,7 +14,7 @@ namespace SFT {
 #pragma region VulkanMembers
 		VkInstance m_instance;
 		VkSurfaceKHR m_surface;
-		
+		VkPhysicalDevice m_physicalDevice;
 
 #pragma endregion
 
@@ -25,10 +25,15 @@ namespace SFT {
 		VulkanRenderer(GLFWwindow* winHandle);
 		~VulkanRenderer();
 		virtual void initialize() override;
-		void create_surface();
-		void create_vk_instance();
 		virtual void destroy() override;
+#pragma region Vulkan Unique Functions
+		void create_surface() {};
+		void create_vk_instance();
 		bool checkValidationLayerSupport();
+		void pickPhysicalDevice();
+		bool isDeviceSuitable(VkPhysicalDevice device);
+		double ScorePhysicalDevice(VkPhysicalDevice& device);
 		std::vector<std::string> getAllowedLayers();
+#pragma endregion
 	};
 }

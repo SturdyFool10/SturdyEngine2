@@ -3,4 +3,5 @@
 
 int main() {
 	SFT::SturdyEngine app = SFT::SturdyEngine();
+	app.run();
 }

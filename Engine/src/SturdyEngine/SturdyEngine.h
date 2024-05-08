@@ -5,7 +5,7 @@ namespace SFT {
 	
 	class SturdyEngine {
 	private:
-		VulkanRenderer m_renderer;
+		VulkanRenderer* m_renderer;
 		Window m_window;
 
 		static void resizeCallback(const input::ResizeEvent& ev) {
