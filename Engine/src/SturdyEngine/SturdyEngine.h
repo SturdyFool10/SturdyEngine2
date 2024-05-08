@@ -6,7 +6,7 @@ namespace SFT {
 	class SturdyEngine {
 	private:
 		VulkanRenderer* m_renderer;
-		Window m_window;
+		Window* m_window;
 
 		static void resizeCallback(const input::ResizeEvent& ev) {
 			VulkanRenderer* rend = static_cast<VulkanRenderer*>(ev.arb); //PERSONAL CONTRACT WITH CODE: Engine sets this from its renderer member at construction
@@ -15,7 +15,7 @@ namespace SFT {
 
 	public:
 		SturdyEngine();
-
+		~SturdyEngine();
 		void run();
 	};
 }

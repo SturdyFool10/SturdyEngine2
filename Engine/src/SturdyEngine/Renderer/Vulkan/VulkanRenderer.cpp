@@ -109,7 +109,7 @@ namespace SFT {
 		}
 		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(this->m_instance, &deviceCount, devices.data());
-		double maxScore;
+		double maxScore = 0;
 		VkPhysicalDevice HighestScorer = VK_NULL_HANDLE;
 		for (auto& i : devices) {
 			double score = this->ScorePhysicalDevice(i);
