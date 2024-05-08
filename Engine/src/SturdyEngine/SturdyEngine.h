@@ -1,21 +1,25 @@
 #include "Window/Window.h"
+#define VULKAN
 #include "Renderer/Renderer.h"
-#ifdef VULKAN
+#include <functional>
+#include <chrono>
 #include "Renderer/Vulkan/VulkanRenderer.h" //for now just include the vulkan header, we will not need anything else for nwo
-#endif
 namespace SFT {
 	
+	using MainLoopFunction = std::function<void(double felapsedTime)>; //define the criteria a function must meet for it to be counted as a mainloop function
+	using CleanFunction = std::function<void()>;
+	using SetupFunction = std::function<void()>;
+
 	class SturdyEngine {
 	private:
-#ifdef VULKAN
 		VulkanRenderer* m_renderer;
-#endif
 		Window* m_window;
-
+		MainLoopFunction m_mainFn;
+		SetupFunction m_setupFn;
+		CleanFunction m_cleanFn;
+		bool m_hasFuncs[3] = { false };
 		static void resizeCallback(const input::ResizeEvent& ev) {
-#ifdef VULKAN
 			VulkanRenderer* rend = static_cast<VulkanRenderer*>(ev.arb); //PERSONAL CONTRACT WITH CODE: Engine sets this from its renderer member at construction
-#endif
 			rend->resize(ev.size);
 		}
 
@@ -23,5 +27,8 @@ namespace SFT {
 		SturdyEngine();
 		~SturdyEngine();
 		void run();
+		void setMainFn(MainLoopFunction fn);
+		void setSetupFn(SetupFunction fn);
+		void setCleanFn(CleanFunction fn);
 	};
 }

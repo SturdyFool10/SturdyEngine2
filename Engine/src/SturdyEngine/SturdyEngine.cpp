@@ -14,8 +14,33 @@ namespace SFT {
 		delete this->m_window;
 	}
 	void SturdyEngine::run() {
+		if (this->m_hasFuncs[0]) {
+			this->m_setupFn();
+		}
+		auto timePoint = std::chrono::high_resolution_clock::now();
 		while (!this->m_window->shouldWindowClose()) {
 			this->m_window->pollEvents();
+			auto newTime = std::chrono::high_resolution_clock::now();
+			std::chrono::duration<double> delta = newTime - timePoint;
+			if (this->m_hasFuncs[1]) {
+				this->m_mainFn(delta.count());
+			}
+		}
+		if (this->m_hasFuncs[2]) {
+			this->m_cleanFn();
 		}
 	}
+
+	void SturdyEngine::setMainFn(MainLoopFunction fn) {
+		this->m_mainFn = fn;
+		this->m_hasFuncs[1] = true;
+	}
+	void SturdyEngine::setSetupFn(SetupFunction fn) {
+		this->m_setupFn = fn;
+		this->m_hasFuncs[0] = true;
+	};
+	void SturdyEngine::setCleanFn(CleanFunction fn) {
+		this->m_cleanFn = fn;
+		this->m_hasFuncs[2] = true;
+	};
 }
