@@ -1,3 +1,4 @@
+#ifdef VULKAN
 #include "../Renderer.h"
 #ifdef _WIN64
 	#define VK_USE_PLATFORM_WIN32_KHR
@@ -37,3 +38,4 @@ namespace SFT {
 #pragma endregion
 	};
 }
+#endif

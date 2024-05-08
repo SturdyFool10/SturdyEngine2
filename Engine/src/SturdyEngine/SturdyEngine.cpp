@@ -2,8 +2,9 @@
 namespace SFT {
 	SturdyEngine::SturdyEngine() {
 		this->m_window = new Window(800, 600, "SturdyEngine App", true);
-		
+#ifdef VULKAN
 		this->m_renderer = new VulkanRenderer(this->m_window->getHandle());
+#endif
 		this->m_renderer->initialize();
 		size_t callbackID = this->m_window->addResizeHandler(resizeCallback);
 		this->m_window->setResizeUserPointer(this->m_renderer, callbackID);

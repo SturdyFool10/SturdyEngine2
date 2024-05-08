@@ -87,16 +87,16 @@ project "Core"
     targetname "SturdyEngine2"
     objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
     filter "configurations:DebugWin"
-        defines { "DEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "DEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
         symbols "On"
 
     filter "configurations:ReleaseWin"
-        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
         optimize "On"
         symbols "On"
 
     filter "configurations:DistWin"
-        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
         optimize "On"
         symbols "Off"
 

@@ -1,3 +1,4 @@
+#ifdef VULKAN
 #include "VulkanRenderer.h"
 #include <iostream>
 
@@ -165,3 +166,4 @@ namespace SFT {
 		vkDestroyInstance(this->m_instance, nullptr);
 	}
 }
+#endif
