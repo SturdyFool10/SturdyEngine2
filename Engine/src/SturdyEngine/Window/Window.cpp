@@ -8,7 +8,7 @@ namespace SFT {
             exit(1);
         }
         if (destroyDefaultSurface) {
-            glfwWindowHint(GLFW_NO_API, GLFW_TRUE);
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         }
         auto window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
         if (!window) {

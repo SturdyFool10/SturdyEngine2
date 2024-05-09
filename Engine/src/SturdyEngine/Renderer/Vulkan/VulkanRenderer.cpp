@@ -126,8 +126,6 @@ namespace SFT {
 			throw std::runtime_error("failed to find a suitable GPU!");
 		}
 		this->m_physicalDevice = HighestScorer;
-
-
 	}
 
 	bool VulkanRenderer::isDeviceSuitable(VkPhysicalDevice device) {
@@ -135,7 +133,8 @@ namespace SFT {
 		vkGetPhysicalDeviceProperties(device, &deviceProperties);
 		VkPhysicalDeviceFeatures deviceFeatures;
 		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader) {
+		auto queFams = this->findQueueFamilies(device);
+		if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU && deviceFeatures.geometryShader && queFams.isComplete()) {
 			return true;
 		}
 		return false;
@@ -151,18 +150,110 @@ namespace SFT {
 			score += deviceProperties.limits.maxFramebufferHeight;
 			score += deviceProperties.limits.maxMemoryAllocationCount;
 			score += deviceFeatures.multiViewport * 10000;
+			score += deviceFeatures.geometryShader * 10000;
 		}
 
 		return score;
 	}
 
 #pragma endregion
+
+#pragma region QueueFamily Discovery
+	QueueFamilyIndices VulkanRenderer::findQueueFamilies(VkPhysicalDevice device) {
+		QueueFamilyIndices indices;
+		// Logic to find queue family indices to populate struct with
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) {
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, this->m_surface, &presentSupport);
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices.graphicsFamily = i;
+			}
+			if (presentSupport) {
+				indices.presentFamily = i;
+			}
+
+			i++;
+		}
+
+		return indices;
+	}
+#pragma endregion
+
+#pragma region Logical Device Creation
+
+	void VulkanRenderer::createLogicalDevice() {
+		QueueFamilyIndices indices = findQueueFamilies(this->m_physicalDevice);
+
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+
+		float queuePriority = 1.0f;
+		for (uint32_t queueFamily : uniqueQueueFamilies) {
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
+
+		VkPhysicalDeviceFeatures deviceFeatures{};
+		vkGetPhysicalDeviceFeatures(m_physicalDevice, &deviceFeatures);
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
+
+		createInfo.pEnabledFeatures = &deviceFeatures;
+		auto layers = getAllowedLayers();
+		std::vector<const char*> cLayers;
+		for (auto& i : layers) {
+			cLayers.push_back(i.c_str());
+		}
+		createInfo.enabledLayerCount = static_cast<uint32_t>(layers.size());
+		createInfo.ppEnabledLayerNames = cLayers.data();
+
+		if (vkCreateDevice(this->m_physicalDevice, &createInfo, nullptr, &this->m_logicalDevice) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create logical device!");
+		}
+		vkGetDeviceQueue(this->m_logicalDevice, indices.graphicsFamily.value(), 0, &this->m_graphicsQueue);
+	}
+
+
+#pragma endregion
+
+#pragma region Surface Creation
+
+	void VulkanRenderer::createSurface() {
+	}
+
+	void VulkanRenderer::setupGLFWSurface() {
+		VkSurfaceKHR surface = this->m_surface;
+		auto glfwresult = glfwCreateWindowSurface(this->m_instance, this->m_win_handle, nullptr, &this->m_surface);
+		if (glfwresult != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface!");
+		}
+	}
+
+#pragma endregion
 	void VulkanRenderer::initialize() {
 		this->create_vk_instance();
+		this->createSurface();
+		this->setupGLFWSurface();
 		this->pickPhysicalDevice();
+		this->createLogicalDevice();
 	}
 
 	void VulkanRenderer::destroy() {
+		vkDestroyDevice(this->m_logicalDevice, nullptr);
+		vkDestroySurfaceKHR(this->m_instance, this->m_surface, nullptr);
 		vkDestroyInstance(this->m_instance, nullptr);
 	}
 }

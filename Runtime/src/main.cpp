@@ -14,8 +14,8 @@ void clean(SFT::SturdyEngine* instance) {
 
 int main() {
 	SFT::SturdyEngine app = SFT::SturdyEngine();
-	app.setSetupFn(setup);
+	/*app.setSetupFn(setup);
 	app.setMainFn(update);
-	app.setCleanFn(clean);
+	app.setCleanFn(clean);*/
 	app.run();
 }

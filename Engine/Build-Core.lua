@@ -87,29 +87,29 @@ project "Core"
     targetname "SturdyEngine2"
     objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
     filter "configurations:DebugWin"
-        defines { "DEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
+        defines { "DEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN", "GLFW_INCLUDE_VULKAN" }
         symbols "On"
 
     filter "configurations:ReleaseWin"
-        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
+        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN", "GLFW_INCLUDE_VULKAN" }
         optimize "On"
         symbols "On"
 
     filter "configurations:DistWin"
-        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN" }
+        defines { "NDEBUG", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "VULKAN", "GLFW_INCLUDE_VULKAN" }
         optimize "On"
         symbols "Off"
 
     filter "configurations:DebugVulkanWin"
-        defines { "DEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "DEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "GLFW_INCLUDE_VULKAN" }
         symbols "On"
 
     filter "configurations:ReleaseVulkanWin"
-        defines { "NDEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "NDEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "GLFW_INCLUDE_VULKAN" }
         optimize "On"
         symbols "On"
 
     filter "configurations:DistVulkanWin"
-        defines { "NDEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN" }
+        defines { "NDEBUG", "VULKAN", "GLFW_EXPOSE_NATIVE_WIN32", "WIN", "GLFW_INCLUDE_VULKAN" }
         optimize "On"
         symbols "Off"

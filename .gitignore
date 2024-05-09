@@ -3,6 +3,8 @@
 *.sln
 *.vsidx
 *.vcxproj.*
+*.foz
+*.foz.*
 Engine/*.vcxproj
 Engine/*.sln
 Engine/*.vsidx
