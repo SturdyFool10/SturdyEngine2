@@ -1,6 +1,7 @@
 #ifdef VULKAN
 #include "VulkanRenderer.h"
 #include <iostream>
+#include "glslang.h"
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -413,6 +414,27 @@ namespace SFT {
 	}
 
 #pragma endregion
+
+#pragma region Shader Compilation
+
+	void VulkanRenderer::compile_shader(std::string name) {
+
+	}
+
+	void VulkanRenderer::compileShaders() {
+
+	}
+
+#pragma endregion
+
+
+#pragma region Pipeline Creation
+
+	void VulkanRenderer::createGraphicsPipeline() {
+
+	}
+
+#pragma endregion
 	void VulkanRenderer::initialize() {
 		this->create_vk_instance();
 		this->setupGLFWSurface();
@@ -420,6 +442,8 @@ namespace SFT {
 		this->createLogicalDevice();
 		this->createSwapChain();
 		this->createImageViews();
+		this->compileShaders();
+		this->createGraphicsPipeline();
 	}
 
 	void VulkanRenderer::destroy() {

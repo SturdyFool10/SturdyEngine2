@@ -52,6 +52,9 @@ namespace SFT {
 		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 		void createSwapChain();
 		void createImageViews();
+		void createGraphicsPipeline();
+		void compile_shader(std::string name);
+		void compileShaders();
 #pragma endregion
 		GLFWwindow* m_win_handle;
 
@@ -67,6 +70,7 @@ namespace SFT {
 		VkFormat m_swapChainImageFormat;
 		VkExtent2D m_swapChainExtent;
 		std::vector<VkImageView> m_swapChainImageViews;
+		std::vector<std::vector<uint32_t>> m_CompiledShaders;
 #pragma endregion
 
 
