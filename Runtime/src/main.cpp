@@ -18,4 +18,5 @@ int main() {
 	app.setMainFn(update);
 	app.setCleanFn(clean);*/
 	app.run();
+	exit(0);
 }

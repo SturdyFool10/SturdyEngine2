@@ -10,6 +10,8 @@
 #include "vulkan/vulkan.h"
 #include <stdexcept>
 #include <optional>
+#include <limits> 
+#include <algorithm>
 namespace SFT {
 
 
@@ -20,6 +22,12 @@ namespace SFT {
 		bool isComplete() {
 			return graphicsFamily.has_value() && presentFamily.has_value();
 		}
+	};
+
+	struct SwapChainSupportDetails {
+		VkSurfaceCapabilitiesKHR capabilities;
+		std::vector<VkSurfaceFormatKHR> formats;
+		std::vector<VkPresentModeKHR> presentModes;
 	};
 
 
@@ -36,8 +44,14 @@ namespace SFT {
 		double ScorePhysicalDevice(VkPhysicalDevice& device);
 		std::vector<std::string> getAllowedLayers();
 		void createLogicalDevice();
-		void createSurface();
 		void setupGLFWSurface();
+		bool checkDeviceExtensionSupport(VkPhysicalDevice device, std::vector<const char*> extensionsList);
+		SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+		VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+		VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+		VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+		void createSwapChain();
+		void createImageViews();
 #pragma endregion
 		GLFWwindow* m_win_handle;
 
@@ -48,6 +62,11 @@ namespace SFT {
 		VkDevice m_logicalDevice;
 		VkQueue m_graphicsQueue;
 		VkQueue m_presentQueue;
+		VkSwapchainKHR m_swapChain;
+		std::vector<VkImage> m_swapChainImages;
+		VkFormat m_swapChainImageFormat;
+		VkExtent2D m_swapChainExtent;
+		std::vector<VkImageView> m_swapChainImageViews;
 #pragma endregion
 
 
