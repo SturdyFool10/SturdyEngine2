@@ -5,7 +5,24 @@ project "App"
    targetdir "Binaries/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "src/**.h", "src/**.cpp" }
+   files {
+        "src/**.h",
+        "src/**.cpp",
+        "shaders/**.vert", 
+        "shaders/**.frag", 
+        "shaders/**.geom", 
+        "shaders/**.comp",
+        "shaders/**.tesc",
+        "shaders/**.tese",
+        "shaders/**.mesh",
+        "shaders/**.task",
+        "shaders/**.rgen",
+        "shaders/**.rint",
+        "shaders/**.rahit",
+        "shaders/**.rchit",
+        "shaders/**.rmiss",
+        "shaders/**.rcall"
+    }
    
    local vk_sdk_path = os.getenv("VK_SDK_PATH"):gsub("\\", "/")
    if vk_sdk_path == nil then
@@ -36,7 +53,6 @@ project "App"
    targetdir("../Binaries/%{cfg.buildcfg}/%{wks.name}")
    targetname "%{wks.name}"
    objdir ("../Binaries/Intermediates/%{cfg.buildcfg}/%{prj.name}")
-
     filter "system:windows"
        systemversion "latest"
        defines { "WINDOWS" }
@@ -68,3 +84,4 @@ project "App"
         defines { "NDEBUG", "VULKAN" }
         optimize "On"
         symbols "Off"
+        

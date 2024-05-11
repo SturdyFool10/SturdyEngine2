@@ -1,7 +1,9 @@
 #ifdef VULKAN
 #include "VulkanRenderer.h"
 #include <iostream>
+#include <filesystem>
 #include "glslang.h"
+#include <map>
 
 const std::vector<const char*> validationLayers = {
 	"VK_LAYER_KHRONOS_validation"
@@ -12,7 +14,8 @@ const std::vector<const char*> disallowedLayers = {
 	"VK_LAYER_KHRONOS_synchronization2",
 	"VK_LAYER_LUNARG_monitor",
 	"VK_LAYER_LUNARG_screenshot",
-	"VK_LAYER_KHRONOS_profiles"
+	"VK_LAYER_KHRONOS_profiles",
+	"VK_LAYER_VALVE_steam_fossilize"
 };
 const std::vector<const char*> essentialExtensions = {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME
@@ -25,6 +28,7 @@ const std::vector<const char*> essentialExtensions = {
 #endif
 
 constexpr int SWAPCHAIN_PREFERRED_IMAGE_COUNT = 3;
+namespace fs = std::filesystem;
 
 namespace SFT {
 	VulkanRenderer::VulkanRenderer(GLFWwindow* winHandle) {
@@ -91,6 +95,7 @@ namespace SFT {
 		std::vector<VkLayerProperties> availableLayers(layerCount);
 		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 		for (VkLayerProperties& i : availableLayers) {
+			//std::cout << "Layer: " << i.layerName << "found..." << std::endl;
 			bool layerAllowed = true;
 			for (const char* j : disallowedLayers) {
 				if (strcmp(i.layerName, j) == 0 or (strcmp(i.layerName, "VK_LAYER_KHRONOS_validation") == 0 and (enableValidationLayers == false))) {
@@ -417,11 +422,72 @@ namespace SFT {
 
 #pragma region Shader Compilation
 
-	void VulkanRenderer::compile_shader(std::string name) {
-
-	}
-
 	void VulkanRenderer::compileShaders() {
+		VkShaderCompiler::initializeGlslang();
+
+		const std::string shaderDir = std::filesystem::current_path().string() + "/shaders";
+		//std::cout << shaderDir << std::endl;
+		const std::string spirvExtension = ".spv";
+
+		std::map<std::string, EShLanguage> shaderTypes = {
+			{".vert", EShLangVertex},
+			{".frag", EShLangFragment},
+			{".geom", EShLangGeometry},
+			{".comp", EShLangCompute},
+			{".tesc", EShLangTessControl},
+			{".tese", EShLangTessEvaluation},
+			{".rgen", EShLangRayGen},
+			{".rint", EShLangIntersect},
+			{".rahit", EShLangAnyHit},
+			{".rchit", EShLangClosestHit},
+			{".rmiss", EShLangMiss},
+			{".rcall", EShLangCallable},
+			{".task", EShLangTask},
+			{".mesh", EShLangMesh}
+		};
+		if (!fs::is_directory(shaderDir)) {
+			std::cout << "shaders folder is M.I.A." << std::endl;
+			exit(1);
+			return;
+		}
+		for (const auto& entry : fs::recursive_directory_iterator(shaderDir)) {
+			if (entry.is_regular_file()) {
+				std::string ext = entry.path().extension().string();
+				if (shaderTypes.count(ext)) {
+					fs::path glslPath = entry.path();
+					fs::path spirvPath = glslPath;
+					spirvPath.replace_extension(glslPath.extension().string() + spirvExtension);
+
+					if (!fs::exists(spirvPath)) {
+						std::ifstream shaderFile(glslPath);
+						std::string shaderCode((std::istreambuf_iterator<char>(shaderFile)),
+							std::istreambuf_iterator<char>());
+
+						EShLanguage shaderType = shaderTypes[ext];
+
+						std::vector<uint32_t> spirvCode = VkShaderCompiler::compileGLSLtoSPIRV(shaderCode, shaderType);
+						std::ofstream outputFile(spirvPath, std::ios::out | std::ios::binary);
+						outputFile.write(reinterpret_cast<const char*>(spirvCode.data()), spirvCode.size() * sizeof(uint32_t));
+					}
+					else {
+						std::cout << "Found an existing shader output file... attempting to load..." << std::endl;
+						std::ifstream file(spirvPath, std::ios::ate | std::ios::binary);
+						if (!file.is_open()) {
+							std::cerr << "Failed to open file: " << spirvPath << std::endl;
+							exit(1);
+						}
+						size_t fileSize = static_cast<size_t>(file.tellg());
+						std::vector<uint32_t> buffer(fileSize / sizeof(uint32_t));
+						file.seekg(0);
+						file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
+						file.close();
+
+					}
+				}
+			}
+		}
+
+		VkShaderCompiler::finalizeGlslang();
 
 	}
 

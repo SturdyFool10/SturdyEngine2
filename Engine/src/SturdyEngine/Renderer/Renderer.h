@@ -2,6 +2,10 @@
 #include "GLFW/glfw3.h"
 #include "GLM/common.hpp"
 #include "iostream"
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <vector>
 using glm::tvec2;
 
 namespace SFT {
