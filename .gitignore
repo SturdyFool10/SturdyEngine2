@@ -5,6 +5,7 @@
 *.vcxproj.*
 *.foz
 *.foz.*
+*.spv
 Engine/*.vcxproj
 Engine/*.sln
 Engine/*.vsidx
