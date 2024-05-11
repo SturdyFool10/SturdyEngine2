@@ -467,6 +467,7 @@ namespace SFT {
 
 						std::vector<uint32_t> spirvCode = VkShaderCompiler::compileGLSLtoSPIRV(shaderCode, shaderType);
 						std::ofstream outputFile(spirvPath, std::ios::out | std::ios::binary);
+						m_CompiledShaders.emplace_back(spirvCode);
 						outputFile.write(reinterpret_cast<const char*>(spirvCode.data()), spirvCode.size() * sizeof(uint32_t));
 					}
 					else {
@@ -481,7 +482,7 @@ namespace SFT {
 						file.seekg(0);
 						file.read(reinterpret_cast<char*>(buffer.data()), fileSize);
 						file.close();
-
+						m_CompiledShaders.emplace_back(buffer);
 					}
 				}
 			}
